@@ -1,0 +1,199 @@
+#fp:first-letter{
+    font-size : 130%;/*表示首字要放大的比率大小*/
+    
+    color : #BDFF00;
+    
+    font-weight : bold;/*首字粗體*/
+    padding-right: 3px;
+    /*首字與右邊的距離*/
+    line-height: 100%;/*表示首字放大的行高*/
+    }
+    .demo{line-height: 180%;/*表示段落其他小字要放大的行高*/
+    text-align:justify;}
+   
+    .text-color-1 {
+        color: #BDFF00;
+    }
+    .banner {
+      background-color: rgba(0, 0, 0, .7);
+      background-blend-mode: multiply;
+        width: 100%;
+        height: 50vh;
+        display: flex;
+        align-items: center;
+        background-size:cover;
+        background-position:50%;
+      }
+  .text-color-2 {
+        color: #00D27A;
+  }
+  .title{
+    display: flex;
+  /* 水平置中 */
+  justify-content: center;    
+  /* 垂直置中 */
+  align-items: center;
+  }
+  .illustrate{
+  /* 水平置中 */
+  justify-content: center;    
+  /* 垂直置中 */
+  align-items: center;
+  }
+  
+  .material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+   
+  }
+  .no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+  }
+      .swiper {
+        width: 100%;
+        height: 100%;
+      }
+  
+      .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+  
+      .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+  
+      .swiper {
+        width: 100%;
+        height: 300px;
+        margin: 20px auto;
+      }
+  
+      .append-buttons {
+        text-align: center;
+        margin-top: 20px;
+      }
+  
+      .append-buttons button {
+        display: inline-block;
+        cursor: pointer;
+        border: 1px solid #007aff;
+        color: #007aff;
+        text-decoration: none;
+        padding: 4px 10px;
+        border-radius: 4px;
+        margin: 0 10px;
+        font-size: 13px;
+      }
+      .category a.active {
+        background-color: #ae7d58;
+        color: #fff;
+    }
+    .border-primary {
+      border-color: #ae7d58;
+  }
+  .list-group-item.active {
+    background-color: #00D27A;
+    color: #fff;
+  }
+  .list-group{
+    --bs-list-group-active-bg: #00D27A;
+    --bs-list-group-active-border-color: #00D27A;
+    --bs-list-group-action-hover-bg:#00D27A;
+  }
+  .list-group-item {
+    background: rgba(0, 0, 0, 0);
+    color:white;
+    font-weight:bold;
+  } 
+  border-bottom{
+    color:white;
+    font-weight:bold;
+    border: 2rem solid;
+  }
+  .card-category {
+       position: absolute; 
+       bottom: 45%;
+      left: 80%;
+       padding: 0.25rem 0.5rem; 
+      background-color: #BDFF00;
+      border-radius: 0.25rem;
+      color: #000;
+  }
+  .active>.page-link, .page-link.active {
+    z-index: 3;
+    /* color: var(--bs-pagination-active-color); */
+    background-color: #414666;;
+    border-color:#414666;;
+  }
+  .page-link {
+    color:black;
+  }
+  /* .move-right {
+    margin-left: 10%;
+  } */
+  
+  
+  .btn-primary {
+    color: #fff;
+    background-color: #478069;
+    border-color: #478069
+  }
+  
+  .btn-primary.focus,.btn-primary:hover {
+    color: #fff;
+    background-color: #00D27A;
+    border-color: #355f4e
+  }
+  
+  .btn-primary.disabled,.btn-primary:disabled {
+    color: #fff;
+    background-color: #478069;
+    border-color: #478069
+  }
+  
+  .btn-primary:not(:disabled):not(.disabled).active,.btn-primary:not(:disabled):not(.disabled):active,.show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #355f4e;
+    border-color: #305747
+  }
+  
+  .btn-primary:not(:disabled):not(.disabled).active:focus,.btn-primary:not(:disabled):not(.disabled):active:focus,.show>.btn-primary.dropdown-toggle:focus {
+    box-shadow: 0 0 0 .2rem rgba(99,147,128,.5)
+  }
+  .btn-block {
+    display: block;
+    width: 100%
+  }
+  
+  .btn-block+.btn-block {
+    margin-top: .5rem
+  }
+  
+  input[type=button].btn-block,input[type=reset].btn-block,input[type=submit].btn-block {
+    width: 100%
+  }
+  
+  a.link-green{
+    color: white;
+    text-decoration: none;
+  }
+  a.link-green:hover {
+    color: #BDFF00;
+  }
+  
+  .mr-2,.mx-2 {
+      margin-right: .5rem!important
+  }
+  
