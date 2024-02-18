@@ -31,6 +31,7 @@ async function getProducts() {
   }
 };
 
+//加入購物車
 async function addCartItem(id) {
   try {
     const orderData={
@@ -56,6 +57,7 @@ async function addCartItem(id) {
     })
   }
 };
+
 //根據當前頁與每頁數量計算分頁資料
 const paginatedItems = computed(() => {
   const startIndex = (pages.currentPage - 1) * pages.itemsPerPage;
@@ -63,6 +65,7 @@ const paginatedItems = computed(() => {
   //return products.value.slice(startIndex, endIndex)
   return filteredItems.value.slice(startIndex, endIndex);
 });
+
 //課程分類
 const filteredItems = computed(() => {
   if (selectedCategory.value === '') {
@@ -132,7 +135,7 @@ function filterByCategory(category) {
           <div class="row">
 
             <div class="col-md-4 text-white" v-for="(item) in paginatedItems" :key="item.id">
-              <a>
+              <router-link :to="`/product/${item.id}`" class="text-decoration-none">
                 <div class="card mb-4 shadow-sm  bg-dark border">
                   <img :src="item.imageUrl" class="card-img-top " style="height: 200px;" alt="主圖">
                   <div class="card-category">{{ item.category }}</div>
@@ -145,13 +148,14 @@ function filterByCategory(category) {
                     <p class="card-text mb-4"><span class="fs-4 fw-bold" style="color: #FFD700;">${{ item.price }}</span>
                       <del class="text-light ms-2">$ {{ item.origin_price }} 元 </del>
                     </p>
-                    <div class="btn-group d-flex justify-content-center">
+                    <!-- <div class="btn-group d-flex justify-content-center">
                       <a href="#" class="btn  py-2 px-5 z-20 text-white fw-bold" style="background-color: #00D27A;"
                         @click.prevent="addCartItem(item.id)">加入購物車</a>
-                    </div>
+                    </div> -->
                   </div>
+                  <router-link :to="`/product/${item.id}`" class="prod-link"></router-link>
                 </div>
-              </a>
+              </router-link>
             </div>
 
             <pagination :pages="pages" :get-products="getProducts"></pagination>
