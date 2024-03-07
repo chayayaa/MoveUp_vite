@@ -11,7 +11,6 @@ const loadingStatus = ref({ loadingproduct: '' });
 const isLoading = ref(false);
 const route = useRoute();
 const products = ref([]);
-const qty = '1';
 const product = reactive({
   Id: '',
   categoryName: '',
@@ -21,11 +20,11 @@ const product = reactive({
 
 onMounted(async () => {
   product.Id = route.path.split('/')[2];
-  console.log(product.Id)
+
   await getProduct(product.Id);
   await getCart();
   await getProducts();
-  
+
 });
 
 async function getCart() {
@@ -44,8 +43,6 @@ async function getProduct(id) {
   try {
     const res = await api.getProductAPI(id);
     product.value = res.data.product;
-    console.log(product.value)
-
   }
   catch (err) {
     console.log(err);
@@ -56,19 +53,27 @@ async function getProducts() {
   try {
     const res = await api.getProductsAPI();
     products.value = res.data.products.slice(0, 3);
+    console.log(products.value)
+    console.log(products.value.length)
+
   }
   catch (err) {
     console.log(err);
   }
 };
 
-async function modifyCartItem(id,qty) {
-  console.log(id+'，'+qty)
+//加入購物車
+async function addCartItem(id) {
+  const quantityString = document.getElementById('quantityInput').value;
+  var quantity = parseInt(quantityString, 10);
+  var qty= isNaN(quantity) ? 0 : quantity;
   try {
-    const orderData={
+    const orderData = {
       product_id: id,
       qty: qty
     };
+    console.log(orderData)
+
     const res = await api.addCartAPI(orderData);
     if (res.data.success) {
       Swal.fire({
@@ -88,6 +93,27 @@ async function modifyCartItem(id,qty) {
     })
   }
 };
+const decrementQuantity = (index) => {
+  const inputElement = document.querySelector('#quantityInput')
+  if (parseInt(inputElement.value) > 0) {
+    const newValue = parseInt(inputElement.value) - 1
+    inputElement.value = newValue.toString()
+    // activityInformation._value.ticketTypes[index].quantity = newValue
+  }
+}
+
+const incrementQuantity = (index) => {
+  const inputElement = document.querySelector('#quantityInput')
+  const newValue = parseInt(inputElement.value) + 1
+  inputElement.value = newValue.toString()
+  //activityInformation._value.ticketTypes[index].quantity = newValue
+}
+
+// const updateQuantity = (index, value) => {
+//   const quantity = parseInt(value)
+//   // 更新 ticketTypeItem.quantity
+//   activityInformation._value.ticketTypes[index].quantity = quantity
+// }
 </script>
 
 <template>
@@ -114,7 +140,7 @@ async function modifyCartItem(id,qty) {
           </p>
           <div class="row">
             <div class="d-flex col-8">
-              <div class="input-group my-3 mr-2 col-3">
+              <!-- <div class="input-group my-3 mr-2 col-3">
                 <select class="form-select" v-model="qty" aria-label="Default select example">
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -127,11 +153,21 @@ async function modifyCartItem(id,qty) {
                   <option value="9">9</option>
                   <option value="10">10</option>
                 </select>
-              </div>
+              </div> -->
+                <div class="flex items-center justify-center pt-3 px-3">
+                  <button class="border border-gray-500 px-2 py-1 bg-gray-200" @click="decrementQuantity(index)">
+                    -
+                  </button>
+                  <input type="number" class="quantity border border-gray-500 text-center w-16 py-1 price" min="0"
+                    value="0" :value="ticketTypeItem.quantity" id="quantityInput" />
+                  <button class="border border-gray-500 px-2 py-1 bg-gray-200" @click="incrementQuantity(index)">
+                    +
+                  </button>
+                </div>
               <div class="col-3">
                 <div class="btn-group d-flex justify-content-center my-3 mr-4">
                   <button class="btn btn-primary text-white btn-block"
-                    @click="modifyCartItem(product.value.id,qty)">加入購物車</button>
+                    @click="addCartItem(product.value.id)">加入購物車</button>
                 </div>
               </div>
             </div>
@@ -139,23 +175,26 @@ async function modifyCartItem(id,qty) {
         </div>
       </div>
       <hr>
-      <h2 class="font-weight-bold mt-4 text-white">熱門商品</h2>
-      <template v-if="products.length > 0">
-        <div class="row">
-          <div class="col-md-4" v-for="item in products" :key="item.id" >
-            <div class="card mb-4 position-relative bg-dark border">
-              <img :src="item.imageUrl" class="card-img-top " style="height: 200px;">
-              <div class="card-body">
-                <h3 class="text-white fw-bold">{{ item.title }}</h3>
-                <p class="card-text mb-4"><span class="fs-1 fw-bold" style="color: #FFD700;">${{ item.price }}</span>
-                  <del class="text-light ms-2">$ {{ item.origin_price }} 元 </del>
-                </p>
-                <router-link :to="`/Product/${item.id}`" class="btn btn-primary text-white mt-2 btn-block">查看更多</router-link>
+      <div class="mx-5">
+        <h2 class="font-weight-bold mt-4 text-white text-center">推薦商品</h2>
+        <template v-if="products.length > 0">
+          <div class="row">
+            <div class="col-md-4" v-for="item in products" :key="item.id">
+              <div class="card mb-4 position-relative bg-dark border mx-3">
+                <img :src="item.imageUrl" class="card-img-top " style="height: 200px;">
+                <div class="card-body">
+                  <h3 class="text-white fw-bold">{{ item.title }}</h3>
+                  <p class="card-text mb-4"><span class="fs-1 fw-bold" style="color: #FFD700;">${{ item.price }}</span>
+                    <del class="text-light ms-2">$ {{ item.origin_price }} 元 </del>
+                  </p>
+                  <router-link :to="`/Product/${item.id}`"
+                    class="btn btn-primary text-white mt-2 btn-block">查看更多</router-link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </template>
+        </template>
+      </div>
     </div>
   </div>
 </template>  
