@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,watch,defineEmits } from 'vue';
 import Swal from 'sweetalert2';
 
 import * as api from '@/api.js';
@@ -8,6 +8,7 @@ import Nav from '../components/NavComponent.vue';
 
 const loadingStatus = ref({ loadingItem: '' });
 const isLoading = ref(false);
+ const emits = defineEmits();
 const cartPrice= ref(0);
 const cart = ref([]);
 const form = ref({
@@ -31,6 +32,7 @@ async function getCart() {
     cart.value = res.data.data.carts;
     console.log(cart.value);
     isLoading.value = false;
+    updateTotal();
   }
   catch (err) {
     console.log(err);
@@ -50,44 +52,16 @@ async function removeCartItem(id) {
   loadingStatus.value.loadingItem = '';
   isLoading.value = false;
 };
-const decrementQuantity = (index) => {
-  const inputElement = document.querySelector('#quantityInput_' + index);
-  if (parseInt(inputElement.value) > 0) {
-    const newValue = parseInt(inputElement.value) - 1;
-    inputElement.value = newValue.toString();
-    //this.updateTotal(index);
-  }
-}
 
-const incrementQuantity = (index) => {
-  console.log(index);
-  const inputElement = document.querySelector('#quantityInput_' + index);
-  const newValue = parseInt(inputElement.value) + 1;
-  inputElement.value = newValue.toString();
-  updateCartItem(index);
-}
-
-//加入購物車
-async function updateCartItem(index) {
-  const quantityString = document.getElementById('quantityInput_'+index).value;
-  var quantity = parseInt(quantityString, 10);
-  var qty= isNaN(quantity) ? 0 : quantity;
-  console.log(cart[index])
+//修改購物車
+async function editCartItem(cid,pid,quantity) {
   try {
     const orderData = {
-      product_id: cart[index].product.id,
-      qty: qty
+      product_id:pid,
+      qty: quantity
     };
-    console.log(orderData);
-
-    const res = await api.addCartAPI(orderData);
-    if (res.data.success) {
-      Swal.fire({
-        title: '成功!',
-        text: '已加入購物車',
-        icon: 'success'
-      })
-    }
+    const res = await api.editCartAPI(cid,orderData);
+    getCart();
   }
   catch (err) {
     console.log(err);
@@ -99,6 +73,19 @@ async function updateCartItem(index) {
     })
   }
 };
+function updateTotal() {
+      cartPrice.value = 0; 
+      cart.value.forEach((item) => {
+        cartPrice.value += item.final_total;
+      });
+          console.log(cartPrice.value)
+      };
+  // 使用 watch 监听 cartPrice 的变化，一旦变化就触发事件
+    watch(cartPrice, () => {
+      // 直接调用 emit 方法
+      emits('someEvent', cartPrice.value);
+    });   
+   
 </script>
 
 <template>
@@ -200,29 +187,26 @@ async function updateCartItem(index) {
                       <div class="d-flex flex-column align-items-stretch">
                       <div class="fs-1 mb-4">{{ item.product.title }}</div>
                       <div class="input-group input-group-sm">
-                        <button class="border border-gray-500 px-2 py-1 bg-gray-500" @click="decrementQuantity(index)">
+                        <button class="border border-gray-500 px-2 py-1 bg-gray-500" :disabled="item.qty === 1" @click="item.qty --;editCartItem(item.id,item.product.id, item.qty)">
                           -
                         </button>
                         <input type="number" class="quantity border border-gray-500 text-center w-4 py-1 price" min="1"
                           :value="item.qty" :id="'quantityInput_' + index" />
-                        <button class="border border-gray-500 px-2 py-1 bg-gray-500" @click="incrementQuantity(index)">
+                        <button class="border border-gray-500 px-2 py-1 bg-gray-500" @click="item.qty ++;editCartItem(item.id,item.product.id, item.qty)">
                           +
                         </button>
                       </div>
                       </div>
                     </td>
                     <td>
-                      {{ item.product.price }}
+                      ${{ item.product.price }}
                     </td>
                   </tr>
                 </template>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colspan="3" class="text-end">總計:</td>
-                  <td colspan="2" class="text-end">{{ cart.total }}</td>
-                </tr>
-              </tfoot>
+                 <template v-else>
+                   <td colspan="4" class="text-center text-light fs-2">購物車無商品，快來去逛逛!</td>
+                </template>
+              </tbody>            
             </table>
           </div>
         </div>
@@ -233,12 +217,12 @@ async function updateCartItem(index) {
             </div>
             <div class="checkout_summary-price">
               <div>原價</div>
-              <div></div>
+              <div>${{ cartPrice }}</div>
             </div>
 
             <div class="checkout_summary-total">
               <div>總計</div>
-              <h3>$0</h3>
+              <h3>${{ cartPrice }}</h3>
             </div>
             <div class="form_row">
               <div class="form_group">
@@ -247,21 +231,16 @@ async function updateCartItem(index) {
               </div>
             </div>
             <div class="form_row">
-            </div><button class="btn btn-primary--cancel" style="margin: 0px;">
-              請選擇
-            </button>
-            <button class="btn btn-primary">
+            </div>
+            <button class="btn btn-primary" style="margin: 0px;" v-if="cart.length > 0">
               結帳
+            </button>
+            <button class="btn btn-primary--cancel" v-else>
+              請選擇
             </button>
           </div>
         </div>
-      </div>
-      <!-- <div class="row text-center">
-        <h2 class="text-white font-weight-bold mb-1 mt-4 mt-md-0">購物車</h2>
-        <hr class="border-white hr-border-width">
-        <h3 class="text-white font-weight-bold mb-0 mt-4 mt-md-0">購物車無商品，快來去逛逛!</h3>
-
-      </div> -->
+      </div>     
     </div>
   </div>
 </template>

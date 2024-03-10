@@ -10,6 +10,7 @@ import Nav from '../components/NavComponent.vue';
 const loadingStatus = ref({ loadingproduct: '' });
 const isLoading = ref(false);
 const route = useRoute();
+const qty= ref(1);
 const products = ref([]);
 const product = reactive({
   Id: '',
@@ -22,22 +23,22 @@ onMounted(async () => {
   product.Id = route.path.split('/')[2];
 
   await getProduct(product.Id);
-  await getCart();
+ // await getCart();
   await getProducts();
 
 });
 
-async function getCart() {
-  isLoading.value = true;
-  try {
-    const res = await api.getCartAPI();
-    cart.value = res.data.data.carts;
-    isLoading.value = false;
-  }
-  catch (err) {
-    console.log(err);
-  }
-};
+// async function getCart() {
+//   isLoading.value = true;
+//   try {
+//     const res = await api.getCartAPI();
+//     cart.value = res.data.data.carts;
+//     isLoading.value = false;
+//   }
+//   catch (err) {
+//     console.log(err);
+//   }
+// };
 
 async function getProduct(id) {
   try {
@@ -139,7 +140,7 @@ const incrementQuantity = (index) => {
             <del class="text-light ms-2">$ {{ product.value.origin_price }} 元 </del>
           </p>
           <div class="row">
-            <div class="d-flex col-8">
+            <div class="d-flex col-12">
               <!-- <div class="input-group my-3 mr-2 col-3">
                 <select class="form-select" v-model="qty" aria-label="Default select example">
                   <option value="1">1</option>
@@ -155,16 +156,16 @@ const incrementQuantity = (index) => {
                 </select>
               </div> -->
                 <div class="flex items-center justify-center pt-3 px-3">
-                  <button class="border border-gray-500 px-2 py-1 bg-gray-200" @click="decrementQuantity(index)">
+                  <button class="border border-gray-500 px-2 py-1 bg-gray-500":class="{ 'bg-gray-100': qty === 1, 'bg-gray-200': qty !== 1 }" :disabled="qty === 1" @click="qty--">
                     -
                   </button>
-                  <input type="number" class="quantity border border-gray-500 text-center w-16 py-1 price" min="0"
-                    value="0" :value="ticketTypeItem.quantity" id="quantityInput" />
-                  <button class="border border-gray-500 px-2 py-1 bg-gray-200" @click="incrementQuantity(index)">
+                  <input type="number" class="quantity border border-gray-500 text-center w-16 py-1 price" min="1"
+                  v-model="qty" id="quantityInput" />
+                  <button class="border border-gray-500 px-2 py-1 bg-gray-200" @click="qty ++">
                     +
                   </button>
                 </div>
-              <div class="col-3">
+              <div class="col-4">
                 <div class="btn-group d-flex justify-content-center my-3 mr-4">
                   <button class="btn btn-primary text-white btn-block"
                     @click="addCartItem(product.value.id)">加入購物車</button>

@@ -32,3 +32,9 @@ export function addCartAPI(orderData) {
   const url = `${apiUrl}/api/${apiPath}/cart`;
   return axios.post(url,{data:orderData});
 };
+//更新購物車
+export function editCartAPI(cid,orderData) {
+  console.log(cid,orderData.product_id)
+    const url = `${apiUrl}/api/${apiPath}/cart/${cid}`;
+    return axios.put(url,{data:orderData});
+  };
