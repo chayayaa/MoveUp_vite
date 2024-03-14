@@ -2,9 +2,9 @@
 import { ref, onMounted, computed } from 'vue';
 
 import * as api from '@/api.js';
-import Nav from '../components/NavComponent.vue';
-import Pagination from '../components/Pagination.vue';
-import { usePaginationStore } from '../stores/paginationStore.js';
+import Nav from '../../components/NavComponent.vue';
+import Pagination from '../../components/Pagination.vue';
+import { usePaginationStore } from '../../stores/paginationStore.js';
 import Swal from 'sweetalert2';
 
 // 狀態
@@ -209,4 +209,4 @@ function filterByCategory(category) {
       </div>
     </div>
   </footer>
-</template>
+</template>../../stores/paginationStore.js

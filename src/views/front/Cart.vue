@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 
 import * as api from '@/api.js';
 
-import Nav from '../components/NavComponent.vue';
+import Nav from '../../components/NavComponent.vue';
 
 const loadingStatus = ref({ loadingItem: '' });
 const isLoading = ref(false);
@@ -80,7 +80,7 @@ function updateTotal() {
       });
           console.log(cartPrice.value)
       };
-  // 使用 watch 监听 cartPrice 的变化，一旦变化就触发事件
+
     watch(cartPrice, () => {
       // 直接调用 emit 方法
       emits('someEvent', cartPrice.value);
@@ -232,9 +232,7 @@ function updateTotal() {
             </div>
             <div class="form_row">
             </div>
-            <button class="btn btn-primary" style="margin: 0px;" v-if="cart.length > 0">
-              結帳
-            </button>
+            <router-link :to="`/checkout`" class="btn btn-primary" style="margin: 0px;" v-if="cart.length > 0">結帳</router-link>
             <button class="btn btn-primary--cancel" v-else>
               請選擇
             </button>

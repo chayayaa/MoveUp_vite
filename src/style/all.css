@@ -449,3 +449,9 @@ a {
   width: 100%;
   border-collapse: collapse;
 }
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}

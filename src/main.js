@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia';
+import { Field, Form, ErrorMessage, defineRule } from 'vee-validate';
 
 import App from './App.vue'
 import router from './router';
@@ -18,8 +19,8 @@ app.use(createPinia());
 app.use(router);
 app.use(VueAxios,axios);
 // 全域註冊VeeValidate元件
-// app.component('Field', Field);
-// app.component('Form', Form);
-// app.component('ErrorMessage', ErrorMessage);
+app.component('Field', Field);
+app.component('Form', Form);
+app.component('ErrorMessage', ErrorMessage);
 
 app.mount('#app');

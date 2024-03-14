@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import * as api from '@/api.js';
 
-import Nav from '../components/NavComponent.vue';
+import Nav from '../../components/NavComponent.vue';
 
 const loadingStatus = ref({ loadingproduct: '' });
 const isLoading = ref(false);
@@ -156,12 +156,12 @@ const incrementQuantity = (index) => {
                 </select>
               </div> -->
                 <div class="flex items-center justify-center pt-3 px-3">
-                  <button class="border border-gray-500 px-2 py-1 bg-gray-500":class="{ 'bg-gray-100': qty === 1, 'bg-gray-200': qty !== 1 }" :disabled="qty === 1" @click="qty--">
+                  <button class="border border-gray-500 px-2 py-2 bg-gray-500":class="{ 'bg-gray-100': qty === 1, 'bg-gray-200': qty !== 1 }" :disabled="qty === 1" @click="qty--">
                     -
                   </button>
-                  <input type="number" class="quantity border border-gray-500 text-center w-16 py-1 price" min="1"
+                  <input type="number" class="quantity border border-gray-500 text-center w-16 py-2 price" min="1"
                   v-model="qty" id="quantityInput" />
-                  <button class="border border-gray-500 px-2 py-1 bg-gray-200" @click="qty ++">
+                  <button class="border border-gray-500 px-2 py-2 bg-gray-200" @click="qty ++">
                     +
                   </button>
                 </div>
