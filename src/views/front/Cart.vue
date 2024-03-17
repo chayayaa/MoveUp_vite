@@ -117,47 +117,6 @@ function updateTotal() {
         </div>
       </div>
       <div class="row">
-        <!-- <div class="col-md-7">
-          <h3 class="text-white font-weight-bold mb-0 mt-4 mt-md-0">訂購人資訊</h3>
-          <hr class="border-white hr-border-width">
-          <Form v-slot="{ errors }">
-            <div>
-              <label for="email" class="form-label">Email</label>
-              <Field id="email" name="email" type="email" class="form-control" :class="{ 'is-invalid': errors['email'] }"
-                placeholder="請輸入 Email" rules="email|required"></Field>
-              <ErrorMessage name="email" class="invalid-feedback"></ErrorMessage>
-            </div>
-
-            <div>
-              <label for="name" class="form-label">收件人姓名</label>
-              <Field id="name" name="姓名" type="text" class="form-control" :class="{ 'is-invalid': errors['姓名'] }"
-                placeholder="請輸入姓名" rules="required"></Field>
-              <ErrorMessage name="姓名" class="invalid-feedback"></ErrorMessage>
-            </div>
-
-            <div>
-              <label for="tel" class="form-label">收件人電話</label>
-              <Field id="tel" name="電話" type="text" class="form-control" :class="{ 'is-invalid': errors['電話'] }"
-                placeholder="請輸入電話" rules="required"></Field>
-              <ErrorMessage name="電話" class="invalid-feedback"></ErrorMessage>
-            </div>
-
-            <div>
-              <label for="address" class="form-label">收件人地址</label>
-              <Field id="address" name="地址" type="text" class="form-control" :class="{ 'is-invalid': errors['地址'] }"
-                placeholder="請輸入地址" rules="required"></Field>
-              <ErrorMessage name="地址" class="invalid-feedback"></ErrorMessage>
-            </div>
-
-            <div>
-              <label for="message" class="form-label">留言</label>
-              <textarea name="" id="message" class="form-control" cols="30" rows="10"></textarea>
-            </div>
-            <div class="text-end mt-3">
-              <button type="submit" class="btn btn-danger">送出訂單</button>
-            </div>
-          </Form>
-        </div> -->
         <div class="col-md-8 col-sm-5">
           <div class="border-white">
             <table class="table align-middle">

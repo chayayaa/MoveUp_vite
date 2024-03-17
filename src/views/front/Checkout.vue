@@ -23,6 +23,7 @@ const form = ref({
 
 onMounted(async () => {
   await getCart();
+  updateTotal();
 });
 
 async function getCart() {
@@ -38,7 +39,18 @@ async function getCart() {
     console.log(err);
   }
 };
+function updateTotal() {
+      cartPrice.value = 0; 
+      cart.value.forEach((item) => {
+        cartPrice.value += item.final_total;
+      });
+          console.log(cartPrice.value)
+      };
 
+    watch(cartPrice, () => {
+      // 直接调用 emit 方法
+      emits('someEvent', cartPrice.value);
+    });   
 </script>
 
 <template>
@@ -47,7 +59,7 @@ async function getCart() {
     <!-- <Loading :active="isLoading"></Loading> -->
     <div class="pt-5 px-5 container">
       <div class="row">
-        <div class="col-md-8 col-sm-5">
+        <div class="col-md-8 col-sm-5 mb-3">
           <div class="step-bar">
             <ul class="step-bar_list">
               <li class="step-bar_item step-bar_item--first">
@@ -71,6 +83,8 @@ async function getCart() {
       </div>
       <div class="row">
         <div class="col-md-8 col-sm-5">
+                        <h3 class="text-white font-weight-bold mb-0 mt-4 mt-md-0 mb-2">確認訂單</h3>
+
           <div class="border-white">
             <table class="table align-middle">
               <thead>
@@ -78,6 +92,7 @@ async function getCart() {
                   <th>商品</th>
                   <th style="width: 110px">數量</th>
                   <th>單價</th>
+                   <th>合計</th>
                 </tr>
               </thead>
               <tbody>
@@ -90,57 +105,60 @@ async function getCart() {
                     </td>
                     <td>
                       <div class="d-flex flex-column align-items-stretch">
-                      <div class="fs-1 mb-4">{{ item.product.title }}</div>
-                      <div class="input-group input-group-sm">
-                        <button class="border border-gray-500 px-2 py-1 bg-gray-500" :disabled="item.qty === 1" @click="item.qty --;editCartItem(item.id,item.product.id, item.qty)">
-                          -
-                        </button>
-                        <input type="number" class="quantity border border-gray-500 text-center w-4 py-1 price" min="1"
-                          :value="item.qty" :id="'quantityInput_' + index" />
-                        <button class="border border-gray-500 px-2 py-1 bg-gray-500" @click="item.qty ++;editCartItem(item.id,item.product.id, item.qty)">
-                          +
-                        </button>
-                      </div>
+                      <div class="fs-3 mb-4">{{ item.product.title }}</div>
+                      <div class="fs-5">{{ item.qty }}堂</div>
                       </div>
                     </td>
                     <td>
                       ${{ item.product.price }}
                     </td>
+                    <td>${{ item.product.price* item.qty}}</td>
                   </tr>
+                  <tfoot></tfoot>
                 </template>
               </tbody>            
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="text-end">總計:</td>
+                  <td >${{ cartPrice }}</td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
-        <div class="col-md-7">
-          <h3 class="text-white font-weight-bold mb-0 mt-4 mt-md-0">訂購人資訊</h3>
+        <div class="col-md-4 text-white">
+          <h3 class="font-weight-bold mb-0 mt-4 mt-md-0">填寫訂購資訊</h3>
           <hr class="border-white hr-border-width">
-          <Form v-slot="{ errors }">
+          <VForm v-slot="{ errors }">
             <div>
-              <label for="email" class="form-label">Email</label>
-              <Field id="email" name="email" type="email" class="form-control" :class="{ 'is-invalid': errors['email'] }"
-                placeholder="請輸入 Email" rules="email|required"></Field>
+              <label for="email" class="form-label"><span class="text-danger">*
+              </span> Email</label>
+              <VField id="email" name="email" type="email" class="form-control" :class="{ 'is-invalid': errors['email'] }"
+                placeholder="請輸入 Email" rules="required|email"></VField>
               <ErrorMessage name="email" class="invalid-feedback"></ErrorMessage>
             </div>
 
             <div>
-              <label for="name" class="form-label">收件人姓名</label>
-              <Field id="name" name="姓名" type="text" class="form-control" :class="{ 'is-invalid': errors['姓名'] }"
-                placeholder="請輸入姓名" rules="required"></Field>
+              <label for="name" class="form-label"><span class="text-danger">*
+              </span> 收件人姓名</label>
+              <VField id="name" name="姓名" type="text" class="form-control" :class="{ 'is-invalid': errors['姓名'] }"
+                placeholder="請輸入姓名" rules="required"></VField>
               <ErrorMessage name="姓名" class="invalid-feedback"></ErrorMessage>
             </div>
 
             <div>
-              <label for="tel" class="form-label">收件人電話</label>
-              <Field id="tel" name="電話" type="text" class="form-control" :class="{ 'is-invalid': errors['電話'] }"
-                placeholder="請輸入電話" rules="required"></Field>
+              <label for="tel" class="form-label"><span class="text-danger">*
+              </span> 收件人電話</label>
+              <VField id="tel" name="電話" type="text" class="form-control" :class="{ 'is-invalid': errors['電話'] }"
+                placeholder="請輸入電話" rules="required"></VField>
               <ErrorMessage name="電話" class="invalid-feedback"></ErrorMessage>
             </div>
 
             <div>
-              <label for="address" class="form-label">收件人地址</label>
-              <Field id="address" name="地址" type="text" class="form-control" :class="{ 'is-invalid': errors['地址'] }"
-                placeholder="請輸入地址" rules="required"></Field>
+              <label for="address" class="form-label"><span class="text-danger">*
+              </span> 收件人地址</label>
+              <VField id="address" name="地址" type="text" class="form-control" :class="{ 'is-invalid': errors['地址'] }"
+                placeholder="請輸入地址" rules="required"></VField>
               <ErrorMessage name="地址" class="invalid-feedback"></ErrorMessage>
             </div>
 
@@ -149,9 +167,9 @@ async function getCart() {
               <textarea name="" id="message" class="form-control" cols="30" rows="10"></textarea>
             </div>
             <div class="text-end mt-3">
-              <button type="submit" class="btn btn-danger">送出訂單</button>
+              <button type="submit" class="btn btn-primary">送出訂單</button>
             </div>
-          </Form>
+          </VForm>
         </div>
         
       </div>     
