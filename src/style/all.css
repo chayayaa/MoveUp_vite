@@ -262,7 +262,7 @@ a {
 
 .step-bar_circle--active+.step-bar_line {
   border-top: solid px;
-  border-image-source: linear-gradient(90deg, #ff5722 50%, #c7c6c6 0);
+  border-image-source: linear-gradient(90deg, #ff5722 100%, #c7c6c6 0);
   border-image-slice: 1;
 }
 

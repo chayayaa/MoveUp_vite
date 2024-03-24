@@ -23,6 +23,11 @@ const router = createRouter({
       name: 'checkout',
       component: () => import('../views/front/Checkout.vue')
     },
+    {
+      path: '/complete/:id',
+      name: 'complete',
+      component: () => import('../views/front/Complete.vue')
+    },
   ]
 })
 

@@ -7,9 +7,9 @@ export { apiUrl, apiPath };
 
 // 取得產品
 export function getProductsAPI() {
-    const url = `${apiUrl}/api/${apiPath}/products`;
-    return axios.get(url);
-  };
+  const url = `${apiUrl}/api/${apiPath}/products`;
+  return axios.get(url);
+};
 // 產品介紹
 export function getProductAPI(id) {
   const url = `${apiUrl}/api/${apiPath}/product/${id}`;
@@ -30,11 +30,23 @@ export function deleteCartAPI(id) {
 //新增購物車
 export function addCartAPI(orderData) {
   const url = `${apiUrl}/api/${apiPath}/cart`;
-  return axios.post(url,{data:orderData});
+  return axios.post(url, { data: orderData });
 };
 //更新購物車
-export function editCartAPI(cid,orderData) {
-  console.log(cid,orderData.product_id)
-    const url = `${apiUrl}/api/${apiPath}/cart/${cid}`;
-    return axios.put(url,{data:orderData});
-  };
+export function editCartAPI(cid, orderData) {
+  console.log(cid, orderData.product_id)
+  const url = `${apiUrl}/api/${apiPath}/cart/${cid}`;
+  return axios.put(url, { data: orderData });
+};
+
+//新增訂單
+export function createOrderAPI(orderData) {
+  const url = `${apiUrl}/api/${apiPath}/order`;
+  return axios.post(url, { data: orderData });
+};
+//取訂單
+export function getOrderDataAPI(oid) {
+  const url = `${apiUrl}/api/${apiPath}/order/${oid}`;
+  console.log(url)
+  return axios.get(url);
+};

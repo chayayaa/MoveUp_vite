@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted,watch,defineEmits } from 'vue';
+import { ref, onMounted, watch, defineEmits } from 'vue';
 import Swal from 'sweetalert2';
 
 import * as api from '@/api.js';
@@ -8,8 +8,8 @@ import Nav from '../../components/NavComponent.vue';
 
 const loadingStatus = ref({ loadingItem: '' });
 const isLoading = ref(false);
- const emits = defineEmits();
-const cartPrice= ref(0);
+const emits = defineEmits();
+const cartPrice = ref(0);
 const cart = ref([]);
 const form = ref({
   user: {
@@ -54,13 +54,13 @@ async function removeCartItem(id) {
 };
 
 //修改購物車
-async function editCartItem(cid,pid,quantity) {
+async function editCartItem(cid, pid, quantity) {
   try {
     const orderData = {
-      product_id:pid,
+      product_id: pid,
       qty: quantity
     };
-    const res = await api.editCartAPI(cid,orderData);
+    const res = await api.editCartAPI(cid, orderData);
     getCart();
   }
   catch (err) {
@@ -74,18 +74,18 @@ async function editCartItem(cid,pid,quantity) {
   }
 };
 function updateTotal() {
-      cartPrice.value = 0; 
-      cart.value.forEach((item) => {
-        cartPrice.value += item.final_total;
-      });
-          console.log(cartPrice.value)
-      };
+  cartPrice.value = 0;
+  cart.value.forEach((item) => {
+    cartPrice.value += item.final_total;
+  });
+  console.log(cartPrice.value)
+};
 
-    watch(cartPrice, () => {
-      // 直接调用 emit 方法
-      emits('someEvent', cartPrice.value);
-    });   
-   
+watch(cartPrice, () => {
+  // 直接调用 emit 方法
+  emits('someEvent', cartPrice.value);
+});
+
 </script>
 
 <template>
@@ -93,7 +93,7 @@ function updateTotal() {
   <div class="mt-5 pt-5 about">
     <!-- <Loading :active="isLoading"></Loading> -->
     <div class="pt-5 px-5 container">
-      <div class="row">
+      <div class="row mb-2">
         <div class="col-md-8 col-sm-5">
           <div class="step-bar">
             <ul class="step-bar_list">
@@ -144,17 +144,19 @@ function updateTotal() {
                     </td>
                     <td>
                       <div class="d-flex flex-column align-items-stretch">
-                      <div class="fs-1 mb-4">{{ item.product.title }}</div>
-                      <div class="input-group input-group-sm">
-                        <button class="border border-gray-500 px-2 py-1 bg-gray-500" :disabled="item.qty === 1" @click="item.qty --;editCartItem(item.id,item.product.id, item.qty)">
-                          -
-                        </button>
-                        <input type="number" class="quantity border border-gray-500 text-center w-4 py-1 price" min="1"
-                          :value="item.qty" :id="'quantityInput_' + index" />
-                        <button class="border border-gray-500 px-2 py-1 bg-gray-500" @click="item.qty ++;editCartItem(item.id,item.product.id, item.qty)">
-                          +
-                        </button>
-                      </div>
+                        <div class="fs-1 mb-4">{{ item.product.title }}</div>
+                        <div class="input-group input-group-sm">
+                          <button class="border border-gray-500 px-2 py-1 bg-gray-500" :disabled="item.qty === 1"
+                            @click="item.qty--; editCartItem(item.id, item.product.id, item.qty)">
+                            -
+                          </button>
+                          <input type="number" class="quantity border border-gray-500 text-center w-4 py-1 price"
+                            min="1" :value="item.qty" :id="'quantityInput_' + index" />
+                          <button class="border border-gray-500 px-2 py-1 bg-gray-500"
+                            @click="item.qty++; editCartItem(item.id, item.product.id, item.qty)">
+                            +
+                          </button>
+                        </div>
                       </div>
                     </td>
                     <td>
@@ -162,10 +164,10 @@ function updateTotal() {
                     </td>
                   </tr>
                 </template>
-                 <template v-else>
-                   <td colspan="4" class="text-center text-light fs-2">購物車無商品，快來去逛逛!</td>
+                <template v-else>
+                  <td colspan="4" class="text-center text-light fs-2">購物車無商品，快來去逛逛!</td>
                 </template>
-              </tbody>            
+              </tbody>
             </table>
           </div>
         </div>
@@ -185,21 +187,20 @@ function updateTotal() {
             </div>
             <div class="form_row">
               <div class="form_group">
-                <div class="form_label">使用折扣代碼</div><input type="text" placeholder="請輸入優惠券" class="mb-sm form_input"><span
-                  class="text-warning"></span>
+                <div class="form_label">使用折扣代碼</div><input type="text" placeholder="請輸入優惠券"
+                  class="mb-sm form_input"><span class="text-warning"></span>
               </div>
             </div>
             <div class="form_row">
             </div>
-            <router-link :to="`/checkout`" class="btn btn-primary" style="margin: 0px;" v-if="cart.length > 0">結帳</router-link>
+            <router-link :to="`/checkout`" class="btn btn-primary" style="margin: 0px;"
+              v-if="cart.length > 0">結帳</router-link>
             <button class="btn btn-primary--cancel" v-else>
               請選擇
             </button>
           </div>
         </div>
-      </div>     
+      </div>
     </div>
   </div>
 </template>
-
-
