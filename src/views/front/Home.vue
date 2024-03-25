@@ -24,7 +24,6 @@ async function getProducts() {
     products.value = res.data.products;
     const totalPages = Math.ceil(products.value.length / pages.itemsPerPage);
     pages.totalPages = totalPages;
-    console.log(res.data.products);
   }
   catch (err) {
     console.log(err);
@@ -90,7 +89,7 @@ function filterByCategory(category) {
   <div class="banner" style="background-image: url(https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1280&q=720);
     ">
     <div class=" ps-5 ms-3 "></div>
-    <div class=" ps-5  no-gutters move-right">
+    <div class=" ps-5  no-gutters move-right d-none d-lg-block">
       <figure class="text-end">
         <blockquote class="blockquote">
           <label class="fw-bold text-white fs-1 ">
@@ -120,14 +119,14 @@ function filterByCategory(category) {
             <a class="list-group-item list-group-item-action border-bottom" id="list-profile-list" data-bs-toggle="list"
               href="#list-profile" role="tab" aria-controls="list-profile"
               @click.prevent="filterByCategory('瑜珈')">瑜珈課程</a>
-            <a class="list-group-item list-group-item-action border-bottom" id="list-messages-list" data-bs-toggle="list"
-              href="#list-messages" role="tab" aria-controls="list-messages"
+            <a class="list-group-item list-group-item-action border-bottom" id="list-messages-list"
+              data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages"
               @click.prevent="filterByCategory('有氧')">有氧課程</a>
-            <a class="list-group-item list-group-item-action border-bottom" id="list-settings-list" data-bs-toggle="list"
-              href="#list-settings" role="tab" aria-controls="list-settings"
+            <a class="list-group-item list-group-item-action border-bottom" id="list-settings-list"
+              data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings"
               @click.prevent="filterByCategory('飲食')">飲食課程</a>
-            <a class="list-group-item list-group-item-action border-bottom" id="list-settings-list" data-bs-toggle="list"
-              href="#list-settings" role="tab" aria-controls="list-settings"
+            <a class="list-group-item list-group-item-action border-bottom" id="list-settings-list"
+              data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings"
               @click.prevent="filterByCategory('器材')">器材課程</a>
           </div>
         </div>
@@ -145,7 +144,8 @@ function filterByCategory(category) {
                       <!---->
                       <h3 class="text-white fw-bold">{{ item.title }}</h3>
                     </div>
-                    <p class="card-text mb-4"><span class="fs-4 fw-bold" style="color: #FFD700;">${{ item.price }}</span>
+                    <p class="card-text mb-4"><span class="fs-4 fw-bold" style="color: #FFD700;">${{ item.price
+                        }}</span>
                       <del class="text-light ms-2">$ {{ item.origin_price }} 元 </del>
                     </p>
                     <!-- <div class="btn-group d-flex justify-content-center">
@@ -209,4 +209,4 @@ function filterByCategory(category) {
       </div>
     </div>
   </footer>
-</template>../../stores/paginationStore.js
+</template>
