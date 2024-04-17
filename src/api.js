@@ -78,3 +78,18 @@ export function login(userData) {
   const url = `${apiUrl}/admin/signin`;
   return axios.post(url, userData);
 };
+
+//後台更新課程
+export function updateAdminProductAPI(productData) {
+  console.log(productData.id)
+  const url = `${apiUrl}/api/${apiPath}/admin/product/${productData.id}`;
+  return axios.put(url, { data: productData });
+};
+
+//檢查登入狀態
+export function checkLogin() {
+  var token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+  axios.defaults.headers.common.Authorization = token;
+  const url = `${apiUrl}/api/user/check`;
+  return axios.post(url);
+};

@@ -19,7 +19,6 @@ export const usePaginationStore = defineStore('pagination', {
 
     actions: {
         setCurrentPage(page) {
-            console.log(page)
             this.currentPage = page;
         },
     },

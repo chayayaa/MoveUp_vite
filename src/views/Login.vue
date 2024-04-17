@@ -62,7 +62,7 @@ async function signin() {
         console.log(err);
         Swal.fire({
                 title: '失敗!',
-                text: '登入失敗，請重新登入',
+                text: '帳號或密碼錯誤，請重新登入',
                 allowOutsideClick: false,
                 icon: 'error'
             })
