@@ -1,7 +1,7 @@
 <template>
-    <div class="container">
+    <div class="container mt-5">
         <div class="row justify-content-center mt-3 text-white">
-            <div class="col-8">
+            <div class="col-5">
                 <h1 class="font-weight-normal text-center">
                     請先登入
                 </h1>
@@ -32,13 +32,12 @@
 import { ref, onMounted, watch, defineEmits, reactive } from 'vue';
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2';
-
 import * as api from '@/api.js';
+import axios from 'axios';
 
 const router = useRouter()
 const loadingStatus = ref({ loadingItem: '' });
 const isLoading = ref(false);
-const token = ref();
 const emits = defineEmits();
 const form = reactive({
     user: {
@@ -53,19 +52,18 @@ async function signin() {
         const res = await api.login(user);
         if (res.data.success) {
             const { token } = res.data;
-            const { expired } = res.data;
-            document.cookie = `token=${token}; expires=${new Date(expired * 1000)}; path=/`;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             router.push('/admin/products');
         }
     }
     catch (err) {
         console.log(err);
         Swal.fire({
-                title: '失敗!',
-                text: '帳號或密碼錯誤，請重新登入',
-                allowOutsideClick: false,
-                icon: 'error'
-            })
+            title: '失敗!',
+            text: '帳號或密碼錯誤，請重新登入',
+            allowOutsideClick: false,
+            icon: 'error'
+        })
     }
 
 };

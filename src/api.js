@@ -55,7 +55,6 @@ export function addCartAPI(orderData) {
 
 //更新購物車
 export function editCartAPI(cid, orderData) {
-  console.log(cid, orderData.product_id)
   const url = `${apiUrl}/api/${apiPath}/cart/${cid}`;
   return axios.put(url, { data: orderData });
 };
@@ -69,7 +68,6 @@ export function createOrderAPI(orderData) {
 //取訂單
 export function getOrderDataAPI(oid) {
   const url = `${apiUrl}/api/${apiPath}/order/${oid}`;
-  console.log(url)
   return axios.get(url);
 };
 
@@ -81,15 +79,33 @@ export function login(userData) {
 
 //後台更新課程
 export function updateAdminProductAPI(productData) {
-  console.log(productData.id)
   const url = `${apiUrl}/api/${apiPath}/admin/product/${productData.id}`;
   return axios.put(url, { data: productData });
 };
 
+//後台新增課程
+export function createAdminProductAPI(productData) {
+  const url = `${apiUrl}/api/${apiPath}/admin/product`;
+  return axios.post(url, { data: productData });
+};
+
+
+//後台取課程
+export function getAdminProductsAPI() {
+  const url = `${apiUrl}/api/${apiPath}/admin/products/all`;
+  return axios.get(url);
+};
+
+//後台刪除課程
+export function delAdminProductsAPI(id) {
+  const url = `${apiUrl}/api/${apiPath}/admin/product/${id}`;
+  return axios.delete(url);
+};
+
 //檢查登入狀態
 export function checkLogin() {
-  var token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
-  axios.defaults.headers.common.Authorization = token;
+  const token = axios.defaults.headers.common['Authorization'].split(' ')[1];
+  axios.defaults.headers.common.Authorization= token;
   const url = `${apiUrl}/api/user/check`;
   return axios.post(url);
 };

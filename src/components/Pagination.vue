@@ -1,6 +1,31 @@
+<template>
+  <div class="title">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: !hasPreviousPage }">
+          <a class="page-link" href="#" aria-label="Previous" @click.prevent="previousPage">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+
+        <li class="page-item" :class="{ active: page === currentPage }" v-for="page in totalPages "
+          :key="page + 'page'">
+          <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+        </li>
+
+        <li class="page-item" :class="{ disabled: !hasNextPage }">
+          <a class="page-link" href="#" aria-label="Next" @click.prevent="nextPage">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</template>
+
 <script setup>
 import { usePaginationStore } from '../stores/paginationStore.js';
-import { ref, onMounted, computed  } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const store = usePaginationStore();
 
@@ -28,29 +53,3 @@ const nextPage = () => {
   }
 };
 </script>
-<template>
-    <div class="title">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item" :class="{ disabled: !hasPreviousPage }">
-                    <a class="page-link" href="#" aria-label="Previous"
-                        @click.prevent="previousPage">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-
-                <li class="page-item" :class="{ active: page === currentPage  }" v-for="page in totalPages "
-                    :key="page + 'page'">
-                    <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
-                </li>
-
-                <li class="page-item" :class="{ disabled: !hasNextPage}">
-                    <a class="page-link" href="#" aria-label="Next" @click.prevent="nextPage">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-</template>
-

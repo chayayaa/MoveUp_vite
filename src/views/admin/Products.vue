@@ -8,7 +8,7 @@
                     建立新的課程
                 </button>
             </div>
-            <table class="table mt-4">
+            <table class="table mt-4 text-center">
                 <thead>
                     <tr>
                         <th width="120">
@@ -151,13 +151,19 @@
                                         class="form-control" placeholder="請輸入說明內容">
         </textarea>
                                 </div>
-
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input id="is_enabled" v-model="tempProduct.is_enabled" class="form-check-input"
+                                            type="checkbox" :true-value="1" :false-value="0">
+                                        <label class="form-check-label" for="is_enabled">是否啟用</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center mx-3">
-                        <button type="button" class="btn btn-success btn-lg"
-                            @click="updateData(tempProduct)">確認</button>
+                        <button type="button" class="btn btn-success btn-lg" @click="updateData(tempProduct)"
+                            data-bs-dismiss="modal">確認</button>
                         <button type="button" class="btn btn-outline-secondary btn-lg"
                             data-bs-dismiss="modal">取消</button>
                     </div>
@@ -165,35 +171,37 @@
             </div>
         </div>
     </div>
-
+    <Footer />
 </template>
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue';
+import { ref, reactive, onMounted, computed, defineEmits } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 
 import * as api from '@/api.js';
 
 import Nav from '../../components/AdminNavComponent.vue';
+import Footer from '../../components/FooterComponent.vue';
 import Pagination from '../../components/Pagination.vue';
 import { usePaginationStore } from '../../stores/paginationStore.js';
 
 const loadingStatus = ref({ loadingproduct: '' });
 const isLoading = ref(false);
+const emits = defineEmits();
 const router = useRouter()
 const products = ref([]);
 const pages = usePaginationStore();
 const tempProduct = ref({ imageUrl: [] });
 
 onMounted(async () => {
-    await getProducts();
     await checkLogin();
+    await getProducts();
 });
 
 async function getProducts() {
     try {
-        const res = await api.getProductsAPI();
-        products.value = res.data.products;
+        const res = await api.getAdminProductsAPI();
+        products.value = Object.values(res.data.products);
         const totalPages = Math.ceil(products.value.length / pages.itemsPerPage);
         pages.totalPages = totalPages;
         pages.setCurrentPage(1);
@@ -207,7 +215,7 @@ async function getProducts() {
 const paginatedItems = computed(() => {
     const startIndex = (pages.currentPage - 1) * pages.itemsPerPage;
     const endIndex = startIndex + pages.itemsPerPage;
-    return products.value.slice(startIndex, endIndex)
+    return products.value.slice(startIndex, endIndex);
 });
 
 async function openModal(status, item) {
@@ -216,18 +224,17 @@ async function openModal(status, item) {
             imageUrl: [],
         };
     } else if (status === 'edit') {
-        console.log('edit')
         this.isLoading = true;
         tempProduct.value = { ...item };
     } else if (status === 'delete') {
         this.isLoading = true;
-        const res = await api.deleteCartAPI(item.id);
+        const res = await api.delAdminProductsAPI(item.id);
+        await getProducts();
     }
 };
 
 async function updateData(item) {
     this.isLoading = true;
-    console.log(item)
     try {
         if (item.id) {
             const res = await api.updateAdminProductAPI(item);
@@ -236,20 +243,48 @@ async function updateData(item) {
                     title: '成功!',
                     text: '課程編輯成功',
                     icon: 'success'
-                })
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await getProducts();
+                    }
+                });
             }
-        }
-        else {
-            Swal.fire({
+            else {
+                Swal.fire({
                     title: '失敗!',
                     text: '課程編輯失敗',
                     icon: 'error'
                 })
+            }
+        }
+        else {
+            const res = await api.createAdminProductAPI(item);
+            if (res.data.success) {
+                Swal.fire({
+                    title: '成功!',
+                    text: '課程新增成功',
+                    icon: 'success'
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await getProducts();
+                    }
+                });
+            }
+            else {
+                Swal.fire({
+                    title: '失敗!',
+                    text: '課程新增失敗',
+                    icon: 'error'
+                })
+            }
         }
     }
-    catch (err) { }
+    catch (err) {
+        console.log(err)
 
-    
+    }
+
+
 };
 
 function createImages() {
@@ -268,4 +303,5 @@ async function checkLogin() {
         router.push('/login');
     }
 }
+
 </script>

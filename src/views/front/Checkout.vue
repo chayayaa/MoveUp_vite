@@ -1,67 +1,3 @@
-<script setup>
-import { ref, onMounted, watch, defineEmits, reactive } from 'vue';
-import { useRouter } from 'vue-router'
-import * as api from '@/api.js';
-
-import Nav from '../../components/NavComponent.vue';
-
-const router = useRouter()
-const loadingStatus = ref({ loadingItem: '' });
-const isLoading = ref(false);
-const emits = defineEmits();
-const cartPrice = ref(0);
-const cart = ref([]);
-const form = reactive({
-  user: {
-    name: '',
-    email: '',
-    tel: '',
-    address: '',
-    payment: '',
-  },
-  message: '',
-});
-
-onMounted(async () => {
-  await getCart();
-  updateTotal();
-});
-
-async function getCart() {
-  isLoading.value = true;
-  try {
-    const res = await api.getCartAPI();
-    cart.value = res.data.data.carts;
-    isLoading.value = false;
-    updateTotal();
-  }
-  catch (err) {
-    console.log(err);
-  }
-};
-function updateTotal() {
-  cartPrice.value = 0;
-  cart.value.forEach((item) => {
-    cartPrice.value += item.final_total;
-  });
-};
-//新增訂單
-async function createOrder() {
-  isLoading.value = true;
-  const order = form;
-  console.log(order);
-  try {
-    const res = await api.createOrderAPI(order);
-    if (res.data.success) {
-      router.push(`/complete/${res.data.orderId}`);
-    }
-  }
-  catch (err) {
-    console.log(err);
-  }
-};
-</script>
-
 <template>
   <Nav />
   <div class="mt-5 pt-5 about">
@@ -192,8 +128,72 @@ async function createOrder() {
     </div>
   </VForm>
 </div>
-
 </div>
 </div>
 </div>
+<Footer />
 </template>
+
+<script setup>
+import { ref, onMounted, watch, defineEmits, reactive } from 'vue';
+import { useRouter } from 'vue-router'
+import * as api from '@/api.js';
+
+import Nav from '../../components/NavComponent.vue';
+import Footer from '../../components/FooterComponent.vue';
+
+const router = useRouter()
+const loadingStatus = ref({ loadingItem: '' });
+const isLoading = ref(false);
+const emits = defineEmits();
+const cartPrice = ref(0);
+const cart = ref([]);
+const form = reactive({
+  user: {
+    name: '',
+    email: '',
+    tel: '',
+    address: '',
+    payment: '',
+  },
+  message: '',
+});
+
+onMounted(async () => {
+  await getCart();
+  updateTotal();
+});
+
+async function getCart() {
+  isLoading.value = true;
+  try {
+    const res = await api.getCartAPI();
+    cart.value = res.data.data.carts;
+    isLoading.value = false;
+    updateTotal();
+  }
+  catch (err) {
+    console.log(err);
+  }
+};
+function updateTotal() {
+  cartPrice.value = 0;
+  cart.value.forEach((item) => {
+    cartPrice.value += item.final_total;
+  });
+};
+//新增訂單
+async function createOrder() {
+  isLoading.value = true;
+  const order = form;
+  try {
+    const res = await api.createOrderAPI(order);
+    if (res.data.success) {
+      router.push(`/complete/${res.data.orderId}`);
+    }
+  }
+  catch (err) {
+    console.log(err);
+  }
+};
+</script>

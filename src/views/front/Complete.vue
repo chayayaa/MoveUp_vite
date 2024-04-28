@@ -1,54 +1,3 @@
-<script setup>
-import { ref, onMounted, watch, defineEmits, reactive } from 'vue';
-import { useRouter, useRoute } from 'vue-router'
-import * as api from '@/api.js';
-
-import Nav from '../../components/NavComponent.vue';
-
-const router = useRouter()
-const route = useRoute()
-const loadingStatus = ref({ loadingItem: '' });
-const isLoading = ref(false);
-const emits = defineEmits();
-const cart = ref([]);
-const orderData = ref([]);
-
-onMounted(async () => {
-
-    orderData.Id = route.path.split('/')[2];
-    await getCart();
-    await getOrderData(orderData.Id);
-});
-
-async function getCart() {
-    isLoading.value = true;
-    try {
-        const res = await api.getCartAPI();
-        cart.value = res.data.data.carts;
-        isLoading.value = false;
-    }
-    catch (err) {
-        console.log(err);
-    }
-};
-
-async function getOrderData(id) {
-    isLoading.value = true;
-    console.log(id);
-
-    try {
-        const res = await api.getOrderDataAPI(id);
-        orderData.value = res.data.order;
-        console.log(orderData.value);
-
-        isLoading.value = false;
-    }
-    catch (err) {
-        console.log(err);
-    }
-};
-</script>
-
 <template>
     <Nav />
     <div class="mt-5 pt-5 about">
@@ -188,4 +137,53 @@ async function getOrderData(id) {
 </div>
 </div>
 </div>
+<Footer />
 </template>
+
+<script setup>
+import { ref, onMounted, watch, defineEmits, reactive } from 'vue';
+import { useRouter, useRoute } from 'vue-router'
+import * as api from '@/api.js';
+
+import Nav from '../../components/NavComponent.vue';
+import Footer from '../../components/FooterComponent.vue';
+
+const router = useRouter()
+const route = useRoute()
+const loadingStatus = ref({ loadingItem: '' });
+const isLoading = ref(false);
+const emits = defineEmits();
+const cart = ref([]);
+const orderData = ref([]);
+
+onMounted(async () => {
+
+    orderData.Id = route.path.split('/')[2];
+    await getCart();
+    await getOrderData(orderData.Id);
+});
+
+async function getCart() {
+    isLoading.value = true;
+    try {
+        const res = await api.getCartAPI();
+        cart.value = res.data.data.carts;
+        isLoading.value = false;
+    }
+    catch (err) {
+        console.log(err);
+    }
+};
+
+async function getOrderData(id) {
+    isLoading.value = true;
+    try {
+        const res = await api.getOrderDataAPI(id);
+        orderData.value = res.data.order;
+        isLoading.value = false;
+    }
+    catch (err) {
+        console.log(err);
+    }
+};
+</script>

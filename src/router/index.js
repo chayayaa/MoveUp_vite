@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import axios from 'axios';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -8,44 +9,45 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'home',
+          name: 'Home',
           component: () => import('../views/front/Home.vue')
         },
         {
           path: 'cart',
-          name: 'cart',
+          name: 'Cart',
           component: () => import('../views/front/Cart.vue')
         },
         {
-          path: 'Product/:id',
+          path: 'product/:id',
           name: 'Product',
           component: () => import('../views/front/Product.vue')
         },
         {
           path: 'checkout',
-          name: 'checkout',
+          name: 'Checkout',
           component: () => import('../views/front/Checkout.vue')
         },
         {
           path: 'complete/:id',
-          name: 'complete',
+          name: 'Complete',
           component: () => import('../views/front/Complete.vue')
         },
-        // {
-        //   path: 'Products',
-        //   name: 'products',
-        //   component: () => import('../views/admin/Products.vue')
-        // },
+        {
+          path: 'products',
+          name: 'Products',
+          component: () => import('../views/front/Products.vue')
+        },
       ],
     },
     {
-      path: '/admin/',
+      path: '/admin',
       name: 'Admin',
       children: [
         {
-          path: 'Products',
-          name: 'products',
-          component: () => import('../views/admin/Products.vue')
+          path: 'products',
+          name: 'adminProducts',
+          component: () => import('../views/admin/Products.vue'),
+          // meta: { requiresAuth: true }, // 需驗證
         },
       ],
     },
@@ -57,4 +59,21 @@ const router = createRouter({
   ],
 });
 
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(record => {return record.meta.requiresAuth;})) 
+//   {
+//     const token = axios.defaults.headers.common['Authorization'];
+//     console.log(token)
+//     // axios.defaults.headers.common.Authorization = token;
+//     if (!token || !token.includes('Bearer')) {
+//       next({ path: '/login' });
+//     } else {
+//       const tokenValue = token.split(' ')[1];
+//       axios.defaults.headers.common.Authorization = `Bearer ${tokenValue}`;
+//       next();
+//     }
+//   } else {
+//     next();
+//   }
+// });
 export default router;

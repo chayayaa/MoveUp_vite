@@ -1,93 +1,3 @@
-<script setup>
-import { ref, onMounted, watch, defineEmits } from 'vue';
-import Swal from 'sweetalert2';
-
-import * as api from '@/api.js';
-
-import Nav from '../../components/NavComponent.vue';
-
-const loadingStatus = ref({ loadingItem: '' });
-const isLoading = ref(false);
-const emits = defineEmits();
-const cartPrice = ref(0);
-const cart = ref([]);
-const form = ref({
-  user: {
-    name: '',
-    email: '',
-    tel: '',
-    address: '',
-  },
-  message: '',
-});
-
-onMounted(async () => {
-  await getCart();
-});
-
-async function getCart() {
-  isLoading.value = true;
-  try {
-    const res = await api.getCartAPI();
-    cart.value = res.data.data.carts;
-    console.log(cart.value);
-    isLoading.value = false;
-    updateTotal();
-  }
-  catch (err) {
-    console.log(err);
-  }
-};
-
-async function removeCartItem(id) {
-  isLoading.value = true;
-  try {
-    console.log(id)
-    const res = await api.deleteCartAPI(id);
-    getCart();
-  }
-  catch (err) {
-    console.log(err);
-  }
-  loadingStatus.value.loadingItem = '';
-  isLoading.value = false;
-};
-
-//修改購物車
-async function editCartItem(cid, pid, quantity) {
-  try {
-    const orderData = {
-      product_id: pid,
-      qty: quantity
-    };
-    const res = await api.editCartAPI(cid, orderData);
-    getCart();
-  }
-  catch (err) {
-    console.log(err);
-    Swal.fire({
-      title: '失敗!',
-      text: '請聯繫客服',
-      allowOutsideClick: false,
-      icon: 'error'
-    })
-  }
-};
-function updateTotal() {
-  cartPrice.value = 0;
-  cart.value.forEach((item) => {
-    cartPrice.value += item.final_total;
-  });
-  console.log(cartPrice.value)
-};
-
-watch(cartPrice, () => {
-  // 直接调用 emit 方法
-  emits('someEvent', cartPrice.value);
-});
-
-</script>
-
 <template>
   <Nav />
   <div class="mt-5 pt-5 about">
@@ -185,12 +95,12 @@ watch(cartPrice, () => {
               <div>總計</div>
               <h3>${{ cartPrice }}</h3>
             </div>
-            <div class="form_row">
+            <!-- <div class="form_row">
               <div class="form_group">
                 <div class="form_label">使用折扣代碼</div><input type="text" placeholder="請輸入優惠券"
                   class="mb-sm form_input"><span class="text-warning"></span>
               </div>
-            </div>
+            </div> -->
             <div class="form_row">
             </div>
             <router-link :to="`/checkout`" class="btn btn-primary" style="margin: 0px;"
@@ -203,4 +113,92 @@ watch(cartPrice, () => {
       </div>
     </div>
   </div>
+  <Footer />
 </template>
+
+<script setup>
+import { ref, onMounted, watch, defineEmits } from 'vue';
+import Swal from 'sweetalert2';
+import * as api from '@/api.js';
+
+import Nav from '../../components/NavComponent.vue';
+import Footer from '../../components/FooterComponent.vue';
+
+const loadingStatus = ref({ loadingItem: '' });
+const isLoading = ref(false);
+const emits = defineEmits();
+const cartPrice = ref(0);
+const cart = ref([]);
+const form = ref({
+  user: {
+    name: '',
+    email: '',
+    tel: '',
+    address: '',
+  },
+  message: '',
+});
+
+onMounted(async () => {
+  await getCart();
+});
+
+async function getCart() {
+  isLoading.value = true;
+  try {
+    const res = await api.getCartAPI();
+    cart.value = res.data.data.carts;
+    isLoading.value = false;
+    updateTotal();
+  }
+  catch (err) {
+    console.log(err);
+  }
+};
+
+async function removeCartItem(id) {
+  isLoading.value = true;
+  try {
+    const res = await api.deleteCartAPI(id);
+    getCart();
+  }
+  catch (err) {
+    console.log(err);
+  }
+  loadingStatus.value.loadingItem = '';
+  isLoading.value = false;
+};
+
+//修改購物車
+async function editCartItem(cid, pid, quantity) {
+  try {
+    const orderData = {
+      product_id: pid,
+      qty: quantity
+    };
+    const res = await api.editCartAPI(cid, orderData);
+    getCart();
+  }
+  catch (err) {
+    console.log(err);
+    Swal.fire({
+      title: '失敗!',
+      text: '請聯繫客服',
+      allowOutsideClick: false,
+      icon: 'error'
+    })
+  }
+};
+function updateTotal() {
+  cartPrice.value = 0;
+  cart.value.forEach((item) => {
+    cartPrice.value += item.final_total;
+  });
+};
+
+watch(cartPrice, () => {
+  // 直接调用 emit 方法
+  emits('someEvent', cartPrice.value);
+});
+
+</script>
