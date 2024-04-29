@@ -1,7 +1,9 @@
 <template>
   <Nav />
+  <div>
+    <Loading :active="isLoading"></Loading>
+  </div>
   <div class="mt-5 pt-5 about">
-    <!-- <Loading :active="isLoading"></Loading> -->
     <div class="pt-5 px-5 container">
       <div class="row">
         <div class="col-md-8 col-sm-5 mb-3">
@@ -135,7 +137,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, defineEmits, reactive } from 'vue';
+import { ref, onMounted, defineEmits, reactive } from 'vue';
 import { useRouter } from 'vue-router'
 import * as api from '@/api.js';
 
@@ -143,7 +145,6 @@ import Nav from '../../components/NavComponent.vue';
 import Footer from '../../components/FooterComponent.vue';
 
 const router = useRouter()
-const loadingStatus = ref({ loadingItem: '' });
 const isLoading = ref(false);
 const emits = defineEmits();
 const cartPrice = ref(0);
@@ -169,7 +170,6 @@ async function getCart() {
   try {
     const res = await api.getCartAPI();
     cart.value = res.data.data.carts;
-    isLoading.value = false;
     updateTotal();
   }
   catch (err) {
@@ -181,6 +181,7 @@ function updateTotal() {
   cart.value.forEach((item) => {
     cartPrice.value += item.final_total;
   });
+  isLoading.value = false;
 };
 //新增訂單
 async function createOrder() {

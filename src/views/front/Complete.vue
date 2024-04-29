@@ -1,5 +1,8 @@
 <template>
     <Nav />
+    <div>
+        <Loading :active="isLoading"></Loading>
+    </div>
     <div class="mt-5 pt-5 about">
         <div class="pt-5 px-5 container">
             <div class="row">
@@ -101,34 +104,21 @@
     <div class="col-md-8 col-sm-5 text-white">
         <div class="checkout_summary  text-start">
             <template v-if="orderData && orderData.user">
-                <h3 class="font-weight-bold mb-0 mt-4 mt-md-0">訂購人資訊</h3>
+                <h3 class="fs-2 mb-0 mt-4 mt-md-0 fw-bold">訂購人資訊</h3>
                 <hr class="border-white hr-border-width">
-                <h4 class="font-weight-bold mb-0 mt-4 mt-md-0">Email:{{ orderData.user.email }}</h4>
-                <div>
-                    <label for="email" class="form-label"> Email:</label>
-                    <label class="form-label"></label>
-                </div>
-                <div>
-                    <label for="name" class="form-label">收件人姓名:</label>
-                    <label class="form-label">{{ orderData.user.name }}</label>
-                </div>
-
-                <div>
-                    <label for="tel" class="form-label">收件人電話:</label>
-                    <label class="form-label">{{ orderData.user.tel }}</label>
-                </div>
-
-                <div>
-                    <label for="address" class="form-label">收件人地址:</label>
-                    <label class="form-label">{{ orderData.user.address }}</label>
-                </div>
-                <div>
-                    <label class="form-label">購買方式:</label>
-                    <label class="form-label" v-show="orderData.user.payment === '1'">WebATM</label>
-                    <label class="form-label" v-show="orderData.user.payment === '2'">ATM</label>
-                    <label class="form-label" v-show="orderData.user.payment === '3'">Credit</label>
-                    <label class="form-label" v-show="orderData.user.payment === '4'">ApplePay</label>
-                    <label class="form-label" v-show="orderData.user.payment === '5'">GooglePay</label>
+                <div class="text-start fw-bold">
+                    <h4 class="fs-4 mt-4 mt-md-0 fw-bold">Email:{{ orderData.user.email }}</h4>
+                    <h4 class="fs-4 mt-4 mt-md-0 fw-bold">收件人姓名:{{ orderData.user.name }}</h4>
+                    <h4 class="fs-4 mt-4 mt-md-0 fw-bold">收件人電話:{{ orderData.user.tel }}</h4>
+                    <h4 class="fs-4 mt-4 mt-md-0 fw-bold">收件人地址:{{ orderData.user.address }}</h4>
+                    <div>
+                        <label class="fs-4 fw-bold">購買方式:</label>
+                        <label class="fs-4 mt-4 mt-md-0 fw-bold" v-show="orderData.user.payment === '1'">WebATM</label>
+                        <label class="fs-4 mt-4 mt-md-0 fw-bold" v-show="orderData.user.payment === '2'">ATM</label>
+                        <label class="fs-4 mt-4 mt-md-0 fw-bold" v-show="orderData.user.payment === '3'">Credit</label>
+                        <label class="fs-4 mt-4 mt-md-0 fw-bold" v-show="orderData.user.payment === '4'">ApplePay</label>
+                        <label class="fs-4 mt-4 mt-md-0 fw-bold" v-show="orderData.user.payment === '5'">GooglePay</label>
+                    </div>
                 </div>
             </template>
         </div>
@@ -141,39 +131,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, defineEmits, reactive } from 'vue';
+import { ref, onMounted, defineEmits, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import * as api from '@/api.js';
 
 import Nav from '../../components/NavComponent.vue';
 import Footer from '../../components/FooterComponent.vue';
 
-const router = useRouter()
 const route = useRoute()
-const loadingStatus = ref({ loadingItem: '' });
 const isLoading = ref(false);
 const emits = defineEmits();
-const cart = ref([]);
 const orderData = ref([]);
 
 onMounted(async () => {
-
     orderData.Id = route.path.split('/')[2];
-    await getCart();
     await getOrderData(orderData.Id);
 });
-
-async function getCart() {
-    isLoading.value = true;
-    try {
-        const res = await api.getCartAPI();
-        cart.value = res.data.data.carts;
-        isLoading.value = false;
-    }
-    catch (err) {
-        console.log(err);
-    }
-};
 
 async function getOrderData(id) {
     isLoading.value = true;
@@ -181,6 +154,7 @@ async function getOrderData(id) {
         const res = await api.getOrderDataAPI(id);
         orderData.value = res.data.order;
         isLoading.value = false;
+        console.log(orderData.value)
     }
     catch (err) {
         console.log(err);

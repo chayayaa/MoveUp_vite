@@ -50,11 +50,15 @@
                 <img :src="item.imageUrl" class="card-img-top " style="height: 200px;">
                 <div class="card-body">
                   <h3 class="text-white fw-bold">{{ item.title }}</h3>
-                  <p class="card-text mb-4"><span class="fs-1 fw-bold" style="color: #FFD700;">${{ item.price }}</span>
+                  <p class="card-text mb-4"><span class="fs-1 fw-bold" style="color: #FFD700;">${{ item.price
+                      }}</span>
                     <del class="text-light ms-2">$ {{ item.origin_price }} 元 </del>
                   </p>
-                  <router-link :to="`/Product/${item.id}`"
-                    class="btn btn-primary text-white mt-2 btn-block">查看更多</router-link>
+                  <div class="btn-group d-flex justify-content-center">
+                    <button class="btn btn-primary text-white mt-2 btn-block" @click="openProductPage(item.id)">
+                      查看更多
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -71,11 +75,12 @@ import { ref, reactive, onMounted } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 import * as api from '@/api.js';
+import { useRouter } from 'vue-router'
 
 import Nav from '../../components/NavComponent.vue';
 import Footer from '../../components/FooterComponent.vue';
 
-const loadingStatus = ref({ loadingproduct: '' });
+const router = useRouter()
 const isLoading = ref(false);
 const route = useRoute();
 const qty = ref(1);
@@ -96,9 +101,11 @@ onMounted(async () => {
 });
 
 async function getProduct(id) {
+  isLoading.value = true;
   try {
     const res = await api.getProductAPI(id);
     product.value = res.data.product;
+    isLoading.value = false;
   }
   catch (err) {
     console.log(err);
@@ -106,10 +113,11 @@ async function getProduct(id) {
 };
 
 async function getProducts() {
+  isLoading.value = true;
   try {
     const res = await api.getProductsAPI();
     products.value = res.data.products.slice(0, 3);
-
+    isLoading.value = false;
   }
   catch (err) {
     console.log(err);
@@ -126,14 +134,17 @@ async function addCartItem(id) {
       product_id: id,
       qty: qty
     };
-
     const res = await api.addCartAPI(orderData);
     if (res.data.success) {
       Swal.fire({
         title: '成功!',
         text: '已加入購物車',
         icon: 'success'
-      })
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
     }
   }
   catch (err) {
@@ -146,6 +157,7 @@ async function addCartItem(id) {
     })
   }
 };
+
 const decrementQuantity = (index) => {
   const inputElement = document.querySelector('#quantityInput')
   if (parseInt(inputElement.value) > 0) {
@@ -160,4 +172,9 @@ const incrementQuantity = (index) => {
   inputElement.value = newValue.toString()
 }
 
+async function openProductPage(id) {
+  router.push(`/product/${id}`);
+  await getProduct(product.Id);
+  window.location.reload();
+};
 </script>

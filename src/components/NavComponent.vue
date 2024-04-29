@@ -1,4 +1,7 @@
 <template>
+    <div>
+        <Loading :active="isLoading"></Loading>
+    </div>
     <nav class="navbar navbar-expand-lg navbar-dark position-absolute top-0 start-50 translate-middle-x container"
         style=" width: 100%;">
         <div class="container-fluid mx-5 navbar-brand">
@@ -20,9 +23,9 @@
                 </ul>
                 <router-link :to="`/cart`" class="text-color-2 fs-4 position-relative">
                     <i class="bi bi-cart4"></i>
-                    <span
+                    <span v-if="totalQuantity!==0"
                         class="mt-1 d-flex align-items-center justify-content-center badge badge-light badge-title rounded-pill position-absolute top-0 start-100 translate-middle bg-secondary">{{
-                totalQuantity }}</span>
+            totalQuantity }}</span>
                 </router-link>
             </div>
         </div>
@@ -61,6 +64,7 @@ async function getCart() {
         totalQuantity.value = cart.value.reduce((accumulator, currentItem) => {
             return accumulator + currentItem.qty;
         }, 0);
+        isLoading.value = false;
     }
     catch (err) {
         console.log(err);

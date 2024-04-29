@@ -50,26 +50,8 @@ import { useRouter} from 'vue-router';
 import axios from 'axios';
 import * as api from '@/api.js';
 
-const cart = ref([]);
-const totalQuantity = ref(0); // 儲存購物車中商品的總數量
 const isLoading = ref(false);
 const router = useRouter()
-
-onMounted(async () => {
-    await getCart();
-});
-async function getCart() {
-    isLoading.value = true;
-    try {
-        const res = await api.getCartAPI();
-        cart.value = res.data.data.carts;
-        totalQuantity.value = cart.value.reduce((accumulator, currentItem) => {
-            return accumulator + currentItem.qty;
-        }, 0);
-    }
-    catch (err) {
-    }
-}
 
 function signout() {
     axios.defaults.headers.common['Authorization'] = '';

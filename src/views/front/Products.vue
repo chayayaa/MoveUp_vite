@@ -58,7 +58,6 @@
                     style="background-color: #00D27A;">查看更多</router-link>
                 </div>
               </div>
-              <router-link :to="`/product/${item.id}`" class="prod-link"></router-link>
             </div>
           </router-link>
         </div>
@@ -100,12 +99,10 @@ async function getProducts() {
     products.value = res.data.products;
     const totalPages = Math.ceil(products.value.length / pages.itemsPerPage);
     pages.totalPages = totalPages;
+    isLoading.value = false;
   }
   catch (err) {
     console.log(err);
-  }
-  finally {
-    isLoading.value = false;
   }
 };
 

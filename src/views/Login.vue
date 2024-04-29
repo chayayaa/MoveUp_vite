@@ -1,5 +1,6 @@
 <template>
-    <div class="container mt-5">
+      <Nav />
+    <div class="container mt-5 pt-5">
         <div class="row justify-content-center mt-3 text-white">
             <div class="col-5">
                 <h1 class="font-weight-normal text-center">
@@ -34,6 +35,8 @@ import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2';
 import * as api from '@/api.js';
 import axios from 'axios';
+
+import Nav from '../components/NavComponent.vue';
 
 const router = useRouter()
 const loadingStatus = ref({ loadingItem: '' });
