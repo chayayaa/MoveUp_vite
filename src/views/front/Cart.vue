@@ -1,7 +1,9 @@
 <template>
   <Nav />
+  <div>
+    <Loading :active="isLoading"></Loading>
+  </div>
   <div class="mt-5 pt-5 about">
-    <!-- <Loading :active="isLoading"></Loading> -->
     <div class="pt-5 px-5 container">
       <div class="row mb-2">
         <div class="col-md-8 col-sm-5">
@@ -129,15 +131,6 @@ const isLoading = ref(false);
 const emits = defineEmits();
 const cartPrice = ref(0);
 const cart = ref([]);
-const form = ref({
-  user: {
-    name: '',
-    email: '',
-    tel: '',
-    address: '',
-  },
-  message: '',
-});
 
 onMounted(async () => {
   await getCart();
@@ -166,7 +159,6 @@ async function removeCartItem(id) {
     console.log(err);
   }
   loadingStatus.value.loadingItem = '';
-  isLoading.value = false;
 };
 
 //修改購物車
@@ -190,10 +182,12 @@ async function editCartItem(cid, pid, quantity) {
   }
 };
 function updateTotal() {
+  isLoading.value = true;
   cartPrice.value = 0;
   cart.value.forEach((item) => {
     cartPrice.value += item.final_total;
   });
+  isLoading.value = false;
 };
 
 watch(cartPrice, () => {
