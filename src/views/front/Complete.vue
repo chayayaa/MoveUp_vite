@@ -154,7 +154,6 @@ async function getOrderData(id) {
         const res = await api.getOrderDataAPI(id);
         orderData.value = res.data.order;
         isLoading.value = false;
-        console.log(orderData.value)
     }
     catch (err) {
         console.log(err);

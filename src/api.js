@@ -105,7 +105,7 @@ export function delAdminProductsAPI(id) {
 //檢查登入狀態
 export function checkLogin() {
   const token = axios.defaults.headers.common['Authorization'].split(' ')[1];
-  axios.defaults.headers.common.Authorization= token;
+  axios.defaults.headers.common['Authorization']= token;
   const url = `${apiUrl}/api/user/check`;
   return axios.post(url);
 };
