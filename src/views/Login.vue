@@ -1,5 +1,5 @@
 <template>
-      <Nav />
+    <Nav />
     <div class="container mt-5 pt-5">
         <div class="row justify-content-center mt-3 text-white">
             <div class="col-5">
@@ -55,6 +55,10 @@ async function signin() {
         const res = await api.login(user);
         if (res.data.success) {
             const { token } = res.data;
+            const { expired } = res.data;
+            const expirationTime = new Date().getTime() + (10 * 60 * 1000);
+            localStorage.setItem('token', token);
+            localStorage.setItem('tokenExpiration', expirationTime);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             router.push('/admin/products');
         }

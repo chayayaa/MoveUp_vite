@@ -2,7 +2,7 @@
     <footer class="py-4 bg-primary-lighter pb-5 mb-5">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-8 d-none d-lg-block">
                     <div class=" ps-5  no-gutters">
                         <figure>
                             <blockquote class="blockquote">
@@ -24,7 +24,7 @@
                 <div class="col-md-4 d-flex flex-column justify-content-between text-white " style="text-align:left">
 
                     <ul class="list-unstyled">
-                        <li><label class=" fw-bold text-white fs-3 ">聯絡我們</label>
+                        <li><label class=" fw-bold text-white fs-3 text-center">聯絡我們</label>
                         </li>
                         <li><label class="px-2">地址</label><label class="text-white-50 ">/ 404台中市西屯區台灣大道三段99號</label>
                         </li>

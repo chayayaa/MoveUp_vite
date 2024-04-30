@@ -59,21 +59,4 @@ const router = createRouter({
   ],
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => {return record.meta.requiresAuth;})) 
-//   {
-//     const token = axios.defaults.headers.common['Authorization'];
-//     console.log(token)
-//     // axios.defaults.headers.common.Authorization = token;
-//     if (!token || !token.includes('Bearer')) {
-//       next({ path: '/login' });
-//     } else {
-//       const tokenValue = token.split(' ')[1];
-//       axios.defaults.headers.common.Authorization = `Bearer ${tokenValue}`;
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// });
 export default router;

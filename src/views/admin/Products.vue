@@ -1,5 +1,8 @@
 <template>
     <Nav />
+    <div>
+        <Loading :active="isLoading"></Loading>
+    </div>
     <div class="mt-5 pt-5 about">
         <div class="container main-content pt-5 px-5">
             <div class="text-end">
@@ -177,7 +180,7 @@
 import { ref, reactive, onMounted, computed, defineEmits } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
-
+import axios from 'axios';
 import * as api from '@/api.js';
 
 import Nav from '../../components/AdminNavComponent.vue';
@@ -185,7 +188,6 @@ import Footer from '../../components/FooterComponent.vue';
 import Pagination from '../../components/Pagination.vue';
 import { usePaginationStore } from '../../stores/paginationStore.js';
 
-const loadingStatus = ref({ loadingproduct: '' });
 const isLoading = ref(false);
 const emits = defineEmits();
 const router = useRouter()
@@ -194,17 +196,19 @@ const pages = usePaginationStore();
 const tempProduct = ref({ imageUrl: [] });
 
 onMounted(async () => {
-    await checkLogin();
     await getProducts();
 });
 
 async function getProducts() {
+    await checkLogin();
+    isLoading.value = true;
     try {
         const res = await api.getAdminProductsAPI();
         products.value = Object.values(res.data.products);
         const totalPages = Math.ceil(products.value.length / pages.itemsPerPage);
         pages.totalPages = totalPages;
         pages.setCurrentPage(1);
+        isLoading.value = false;
     }
     catch (err) {
         console.log(err);
@@ -219,35 +223,37 @@ const paginatedItems = computed(() => {
 });
 
 async function openModal(status, item) {
+    isLoading.value = true;
+    await checkLogin();
     if (status === 'new') {
         tempProduct.value = {
             imageUrl: [],
         };
     } else if (status === 'edit') {
-        this.isLoading = true;
         tempProduct.value = { ...item };
     } else if (status === 'delete') {
         this.isLoading = true;
         const res = await api.delAdminProductsAPI(item.id);
         await getProducts();
     }
+    isLoading.value = false;
 };
 
 async function updateData(item) {
-    this.isLoading = true;
     try {
+        await checkLogin();
         if (item.id) {
             const res = await api.updateAdminProductAPI(item);
             if (res.data.success) {
-                Swal.fire({
-                    title: '成功!',
-                    text: '課程編輯成功',
-                    icon: 'success'
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        await getProducts();
-                    }
-                });
+                // Swal.fire({
+                //     title: '成功!',
+                //     text: '課程編輯成功',
+                //     icon: 'success'
+                // }).then(async (result) => {
+                //     if (result.isConfirmed) {
+                await getProducts();
+                //     }
+                // });
             }
             else {
                 Swal.fire({
@@ -260,15 +266,15 @@ async function updateData(item) {
         else {
             const res = await api.createAdminProductAPI(item);
             if (res.data.success) {
-                Swal.fire({
-                    title: '成功!',
-                    text: '課程新增成功',
-                    icon: 'success'
-                }).then(async (result) => {
-                    if (result.isConfirmed) {
-                        await getProducts();
-                    }
-                });
+                // Swal.fire({
+                //     title: '成功!',
+                //     text: '課程新增成功',
+                //     icon: 'success'
+                // }).then(async (result) => {
+                //     if (result.isConfirmed) {
+                await getProducts();
+                //     }
+                // });
             }
             else {
                 Swal.fire({
@@ -293,14 +299,34 @@ function createImages() {
 };
 
 async function checkLogin() {
+    isLoading.value = true;
+    const token = localStorage.getItem('token');
+    const expirationTime = localStorage.getItem('tokenExpiration');
     try {
-        const res = await api.checkLogin();
-        if (!res.data.success) {
-            router.push('/login');
+        if (token && expirationTime) {
+            const currentTime = new Date().getTime();
+            if (currentTime < expirationTime) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                const res = await api.checkLogin();
+                if (!res.data.success) {
+                    router.push('/login');
+                }
+            }
+            else {
+                localStorage.removeItem('token');
+                localStorage.removeItem('tokenExpiration');
+                router.push('/login');
+            }
         }
+        else
+            router.push('/login');
     }
     catch (err) {
         router.push('/login');
+    }
+    finally {
+        isLoading.value = false;
+
     }
 }
 
