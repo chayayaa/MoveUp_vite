@@ -7,7 +7,7 @@ export { apiUrl, apiPath };
 
 // 取得課程
 export function getProductsAPI() {
-  const url = `${apiUrl}/api/${apiPath}/products`;
+  const url = `${apiUrl}/api/${apiPath}/products/all`;
   return axios.get(url);
 };
 

@@ -234,7 +234,24 @@ async function openModal(status, item) {
     } else if (status === 'delete') {
         this.isLoading = true;
         const res = await api.delAdminProductsAPI(item.id);
-        await getProducts();
+        if (res.data.success) {
+            Swal.fire({
+                title: '成功!',
+                text: '刪除成功',
+                icon: 'success'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await getProducts();
+                }
+            });
+        }
+        else {
+            Swal.fire({
+                title: '失敗!',
+                text: '刪除失敗',
+                icon: 'error'
+            })
+        }
     }
     isLoading.value = false;
 };
