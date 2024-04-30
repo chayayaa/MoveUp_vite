@@ -97,6 +97,7 @@ async function getProducts() {
   try {
     const res = await api.getProductsAPI();
     products.value = res.data.products;
+    console.log(products.value)
     const totalPages = Math.ceil(products.value.length / pages.itemsPerPage);
     pages.totalPages = totalPages;
     isLoading.value = false;

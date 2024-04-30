@@ -16,7 +16,7 @@
                         <router-link :to="`/`" class="nav-link text-color-1" aria-current="page">首頁</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="`/adminProducts`" class="nav-link">課程管理</router-link>
+                        <router-link :to="`/admin/products`" class="nav-link">課程管理</router-link>
                     </li>
                     <!-- <li class="nav-item">
                         <a class="nav-link ">優惠卷管理</a>
